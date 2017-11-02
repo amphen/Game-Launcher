@@ -22,9 +22,9 @@ Updater Pros & Cons
  - Slower than other updating methods.
  - Likely will not be developed further!
  
- Setup Steps
+ ##Setup Steps
 -------------------
-> **Step 1:  Create Google Drive API Key**
+###Step 1:  Create Google Drive API Key
 
 > - Visit [Google Cloud Projects Console](https://console.cloud.google.com/) - Sign in with your Google Account
 > - Click on "Select a Project" at the top of the page.
@@ -78,7 +78,7 @@ Updater Pros & Cons
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![](http://www.ascensiongamedev.com/resources/filehost/ed09f28e688147e248efce82ad58ae10.png)
  
  
-> **Step 2:  Setup Google Drive Project Folder**
+###Step 2:  Setup Google Drive Project Folder
 
 > - Go to [Google Drive](https://drive.google.com/drive/my-drive) -  - If asked to sign in, make sure you use the same google account you used to generate the api key.
 
@@ -111,7 +111,7 @@ Updater Pros & Cons
  > - Save your folder id somewhere safe, we will need it in the final step.
  
  
- > **Step 3:  Configuring the Updater**
+###Step 3:  Configuring the Updater
 
 > - Download compile the updater from source, or download the updater on our releases page.
 
@@ -126,18 +126,16 @@ Updater Pros & Cons
 > - Save the settings.json file after you enter your api key and folder id.
 
 
- > **Step 4:  Test the Updater!**
+###Step 4:  Test the Updater!
 
 > - Run Updater.exe and it should start downloading everything in your Google Drive folder. Sometimes there is a delay between the updater seeing changes, so if no files are downloaded give it 10 minutes and try again. Once the update it done the updater will automatically launch Intersect Client.exe, or whatever application is listed in the settings.json file.
 
 
- > **Step ???:  Releasing Future Update**
+###tep ???:  Releasing Future Update
 
 > - To release updates, just go to your Google drive folder and add/remove/replace files. The updater will do the rest!
 
 
-Enjoy
-=======
  
 
 
