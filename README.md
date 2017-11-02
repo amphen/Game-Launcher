@@ -77,3 +77,67 @@ Updater Pros & Cons
  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![](http://www.ascensiongamedev.com/resources/filehost/ed09f28e688147e248efce82ad58ae10.png)
  
+ 
+> **Step 2:  Setup Google Drive Project Folder**
+
+> - Go to [Google Drive](https://drive.google.com/drive/my-drive) -  - If asked to sign in, make sure you use the same google account you used to generate the api key.
+
+> - Create a new folder in Google drive for your updater. You can call it anything.
+ 
+> - Upload the contents of your client folder into the Google drive folder you created. The resulting folder should look like this:
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![](http://www.ascensiongamedev.com/resources/filehost/fc44a8ed7cd735e3b7dcc5be30c2621a.png)
+ 
+> - Once your client files are uploaded, right click on the folder name that contains your Client.exe and Get a Shareable Link
+ 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![](http://www.ascensiongamedev.com/resources/filehost/129d3cc59ec274576ff62b09b1d7a1c5.png)
+ 
+> - Google Drive will tell you that link sharing is ON, this is a good thing.
+ 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![](http://www.ascensiongamedev.com/resources/filehost/e785ba5c77e70d369d968975ec62a8be.png)
+ 
+> - Finally, while you are in the same folder as your Client.exe, look at your browser URL, it should look something like this:
+ 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![](http://www.ascensiongamedev.com/resources/filehost/623f65a8606f38c5219d301700cb2f05.png)
+ 
+> - Click "APIs and Services" in the navigation menu on the left
+ 
+ https://drive.google.com/drive/folders/BBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+  
+ We need to get the folder id for our updater, it is the long list of characters after /folders/. So my folder id is:
+
+ BBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+ 
+ > - Save your folder id somewhere safe, we will need it in the final step.
+ 
+ 
+ > **Step 3:  Configuring the Updater**
+
+> - Download compile the updater from source, or download the updater on our releases page.
+
+> - Extract the Updater in an empty folder on your PC. Your folder should look like this:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![](http://www.ascensiongamedev.com/resources/filehost/aff82e9c8cb2932c3ac1ee119d2186f0.png)
+ 
+> - Open settings.json, in the json, put your folder id (from step 2)  and api key (from step 1) inside the empty quotes.  When you're done, your settings.json should look like this:
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![](http://www.ascensiongamedev.com/resources/filehost/e960004f6772c251d72dc64150fdd28e.png)
+ 
+> - Save the settings.json file after you enter your api key and folder id.
+
+
+ > **Step 4:  Test the Updater!**
+
+> - Run Updater.exe and it should start downloading everything in your Google Drive folder. Sometimes there is a delay between the updater seeing changes, so if no files are downloaded give it 10 minutes and try again. Once the update it done the updater will automatically launch Intersect Client.exe, or whatever application is listed in the settings.json file.
+
+
+ > **Step ???:  Releasing Future Update**
+
+> - To release updates, just go to your Google drive folder and add/remove/replace files. The updater will do the rest!
+
+
+Enjoy
+=======
+ 
+
+
