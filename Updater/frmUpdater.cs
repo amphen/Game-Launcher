@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -41,14 +42,41 @@ namespace Intersect_Updater
 
         private void frmUpdater_Load(object sender, EventArgs e)
         {
-            if (!File.Exists("settings.json"))
+            //Try to load up icon
+            var icon = Icon.ExtractAssociatedIcon(EntryAssemblyInfo.ExecutablePath);
+            if (icon != null) this.Icon = icon;
+            
+            var settingsToTry = new List<string>();
+            settingsToTry.Add("settings.json");
+            var loadedSettings = false;
+            foreach (var directory in Directory.GetDirectories(Directory.GetCurrentDirectory()))
             {
-                MessageBox.Show(@"Could not find settings.json, updater will now close!");
+                if (File.Exists(Path.Combine(directory, "settings.json")))
+                {
+                    settingsToTry.Add(Path.Combine(directory, "settings.json"));
+                }
+            }
+            foreach (var settingsFile in settingsToTry)
+            {
+                try
+                {
+                    settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(settingsFile));
+                    loadedSettings = true;
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+            }
+
+            if (!loadedSettings)
+            {
+                MessageBox.Show(@"Could not find settings.json in updater folder or subdirectories! Closing now!");
                 this.Close();
                 return;
             }
-            settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText("settings.json"));
-            if (string.IsNullOrEmpty(settings.FolderId) || string.IsNullOrEmpty(settings.ApiKey))
+            if (loadedSettings && string.IsNullOrEmpty(settings.FolderId) || string.IsNullOrEmpty(settings.ApiKey))
             {
                 MessageBox.Show(@"Missing folder id or api key in settings. Updater will now close!");
                 this.Close();
@@ -58,7 +86,11 @@ namespace Intersect_Updater
             {
                 if (File.Exists(settings.Background))
                 {
-                    picBackground.BackgroundImage = new Bitmap(settings.Background);
+                    var launcherImage = File.ReadAllBytes(settings.Background);
+                    using (var ms = new MemoryStream(launcherImage))
+                    {
+                        picBackground.BackgroundImage = Bitmap.FromStream(ms);
+                    }
                 }
             }
             this.Text = settings.UpdaterTitle;
@@ -81,6 +113,31 @@ namespace Intersect_Updater
             FilesToDownload = UpdateList.Count;
             if (UpdateList.Count > 0)
             {
+                List<Update> updates = new List<Update>();
+                updates.AddRange(UpdateList);
+
+                UpdateList = new ConcurrentQueue<Update>();
+
+                for (int i = 0; i < updates.Count; i++)
+                {
+                    if (!string.IsNullOrEmpty(settings.Background))
+                    {
+                        var backgroundpath = Path.GetFullPath(settings.Background);
+                        var updatePath = Path.GetFullPath(updates[i].FilePath);
+                        if (backgroundpath == updatePath)
+                        {
+                            var update = updates[i];
+                            updates.Remove(updates[i]);
+                            UpdateList.Enqueue(update);
+                        }
+                    }
+                }
+
+                foreach (var update in updates)
+                {
+                    UpdateList.Enqueue(update);
+                }
+
                 BeginInvoke((Action)(() => UpdateStatus()));
                 for (int i = 0; i < UpdateThreads.Length; i++)
                 {
@@ -112,7 +169,12 @@ namespace Intersect_Updater
            
             //Launch Game
             await Wait();
-            Process.Start(settings.LaunchApplication);
+            string AssemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location).ToString();
+            var path = Path.Combine(AssemblyPath, settings.LaunchApplication);
+            var workingDir = Path.GetDirectoryName(path);
+            var psi = new ProcessStartInfo(path);
+            psi.WorkingDirectory = workingDir;
+            Process.Start(psi);
             BeginInvoke((Action)(() => Close()));
         }
 
@@ -160,6 +222,11 @@ namespace Intersect_Updater
         private bool DownloadUpdate(DriveService service,Update update)
         {
             var request = service.Files.Get(update.UpdateFile.Id);
+            var updatePath = Path.GetFullPath(update.FilePath);
+            if (updatePath == Path.GetFullPath(EntryAssemblyInfo.ExecutablePath))
+            {
+                return true; //Don't try to update self -- it won't work!
+            }
             using (var stream = new FileStream(update.FilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {
 
@@ -185,7 +252,16 @@ namespace Intersect_Updater
                                 var diff = progress.BytesDownloaded - lastProgress;
                                 DownloadedBytes += diff;
                                 lastProgress = progress.BytesDownloaded;
-                                FilesDownloaded++;
+                                if (!string.IsNullOrEmpty(settings.Background))
+                                {
+                                    var backgroundpath = Path.GetFullPath(settings.Background);
+
+                                    if (backgroundpath == updatePath)
+                                    {
+                                        picBackground.BackgroundImage = Bitmap.FromStream(stream);
+                                    }
+                                }
+                                    FilesDownloaded++;
                                 break;
                             }
                             case DownloadStatus.Failed:
@@ -217,6 +293,7 @@ namespace Intersect_Updater
             // List files.
             FileList fileList = listRequest.Execute();
             IList<Google.Apis.Drive.v3.Data.File> files = fileList.Files;
+
             if (files != null && files.Count > 0)
             {
                 foreach (var file in files)

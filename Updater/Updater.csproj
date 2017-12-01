@@ -72,6 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EntryAssemblyInfo.cs" />
     <Compile Include="frmUpdater.cs">
       <SubType>Form</SubType>
     </Compile>
