@@ -1,0 +1,7 @@
+﻿{
+	"FolderId": "",
+	"ApiKey":  "",
+	"UpdaterTitle": "Intersect Launcher",
+	"Background" : "data/launcher.png",
+	"LaunchApplication": "data/Intersect Client.exe"
+}

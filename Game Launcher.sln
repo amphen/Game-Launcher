@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{7C931016-9A2B-4FEB-9AA0-D8A4102D1764}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game Launcher", "Launcher\Game Launcher.csproj", "{7C931016-9A2B-4FEB-9AA0-D8A4102D1764}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +18,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1FB71452-C703-4606-A1E7-83C0E6741F7E}
 	EndGlobalSection
 EndGlobal
