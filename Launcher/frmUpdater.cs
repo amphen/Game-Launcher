@@ -87,9 +87,16 @@ namespace Intersect_Updater
                 if (File.Exists(settings.Background))
                 {
                     var launcherImage = File.ReadAllBytes(settings.Background);
-                    using (var ms = new MemoryStream(launcherImage))
+                    try
                     {
-                        picBackground.BackgroundImage = Bitmap.FromStream(ms);
+                        using (var ms = new MemoryStream(launcherImage))
+                        {
+                            picBackground.BackgroundImage = Bitmap.FromStream(ms);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        
                     }
                 }
             }
@@ -117,7 +124,7 @@ namespace Intersect_Updater
                 updates.AddRange(UpdateList);
 
                 UpdateList = new ConcurrentQueue<Update>();
-
+                var updatePaths = new HashSet<string>();
                 for (int i = 0; i < updates.Count; i++)
                 {
                     if (!string.IsNullOrEmpty(settings.Background))
@@ -128,9 +135,30 @@ namespace Intersect_Updater
                         {
                             var update = updates[i];
                             updates.Remove(updates[i]);
+                            updatePaths.Add(update.FilePath);
                             UpdateList.Enqueue(update);
+                            break;
                         }
                     }
+                }
+
+
+                var updatesToRemove = new List<Update>();
+                foreach (var update in updates)
+                {
+                    if (!updatePaths.Contains(update.FilePath))
+                    {
+                        updatePaths.Add(update.FilePath);
+                    }
+                    else
+                    {
+                        updatesToRemove.Add(update);
+                    }
+                }
+
+                foreach (var update in updatesToRemove)
+                {
+                    updates.Remove(update);
                 }
 
                 foreach (var update in updates)
@@ -227,6 +255,7 @@ namespace Intersect_Updater
             {
                 return true; //Don't try to update self -- it won't work!
             }
+            if (File.Exists(update.FilePath)) File.Delete(update.FilePath);
             using (var stream = new FileStream(update.FilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {
 
