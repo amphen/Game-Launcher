@@ -32,6 +32,8 @@ namespace Intersect_Updater
         private static long DownloadedBytes = 0;
         private static long FilesToDownload = 0;
         private static long FilesDownloaded = 0;
+        private static bool CheckingForUpdates = true;
+        private static int DotCount = 0;
         private static Thread[] UpdateThreads = new Thread[10];
         private TransparentLabel lbl;
 
@@ -118,6 +120,7 @@ namespace Intersect_Updater
 
             var updating = UpdateList.Count > 0;
             FilesToDownload = UpdateList.Count;
+            CheckingForUpdates = false;
             if (UpdateList.Count > 0)
             {
                 List<Update> updates = new List<Update>();
@@ -387,6 +390,28 @@ namespace Intersect_Updater
         private void picBackground_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(175, 0, 0, 0)), 0, lblStatus.Top, this.Width, lblStatus.Height);
+        }
+
+        private void UpdateStatus(string text)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<string>(UpdateStatus), new object[] { text });
+                return;
+            }
+            lblStatus.Text = text;
+            lbl.Text = text;
+            lbl.MeasureString = @"Please wait, checking for updates" + new string('.', 3);
+        }
+
+        private void tmrChecking_Tick(object sender, EventArgs e)
+        {
+            if (CheckingForUpdates)
+            {
+                DotCount++;
+                if (DotCount > 3) DotCount = 0;
+                UpdateStatus(@"Please wait, checking for updates" + new string('.', DotCount));
+            }
         }
     }
 }

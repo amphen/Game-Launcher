@@ -28,8 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.lblStatus = new System.Windows.Forms.Label();
             this.picBackground = new System.Windows.Forms.PictureBox();
+            this.tmrChecking = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.picBackground)).BeginInit();
             this.SuspendLayout();
             // 
@@ -41,7 +43,7 @@
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(708, 55);
             this.lblStatus.TabIndex = 0;
-            this.lblStatus.Text = "Please wait, checking for updates!";
+            this.lblStatus.Text = "Please wait, checking for updates";
             this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // picBackground
@@ -55,6 +57,12 @@
             this.picBackground.TabIndex = 2;
             this.picBackground.TabStop = false;
             this.picBackground.Paint += new System.Windows.Forms.PaintEventHandler(this.picBackground_Paint);
+            // 
+            // tmrChecking
+            // 
+            this.tmrChecking.Enabled = true;
+            this.tmrChecking.Interval = 333;
+            this.tmrChecking.Tick += new System.EventHandler(this.tmrChecking_Tick);
             // 
             // frmUpdater
             // 
@@ -80,6 +88,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.PictureBox picBackground;
+        private System.Windows.Forms.Timer tmrChecking;
     }
 }
 

@@ -3,6 +3,9 @@ using System.Windows.Forms;
 
 public class TransparentLabel : Control
 {
+
+    public string MeasureString;
+
     public TransparentLabel(Label label)
     {
         //setting default properties
@@ -52,7 +55,7 @@ public class TransparentLabel : Control
         using (Graphics graphics = CreateGraphics())
         using (SolidBrush brush = new SolidBrush(ForeColor))
         {
-            SizeF size = graphics.MeasureString(Text, Font);
+            SizeF size = graphics.MeasureString(MeasureString != null ? MeasureString : Text, Font);
 
             // first figure out the top
             float top = 0;
