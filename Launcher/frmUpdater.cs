@@ -118,6 +118,8 @@ namespace Intersect_Updater
             Google.Apis.Drive.v3.DriveService service = new Google.Apis.Drive.v3.DriveService(bcs);
             await CheckFilesRecursively(service,"", settings.FolderId);
 
+            lbl.MeasureString = null;
+
             var updating = UpdateList.Count > 0;
             FilesToDownload = UpdateList.Count;
             CheckingForUpdates = false;
