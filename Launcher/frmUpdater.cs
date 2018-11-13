@@ -40,6 +40,8 @@ namespace Intersect_Updater
         public frmUpdater()
         {
             InitializeComponent();
+            lbl = new TransparentLabel(lblStatus);
+            lbl.ForeColor = Color.White;
         }
 
         private void frmUpdater_Load(object sender, EventArgs e)
@@ -103,8 +105,6 @@ namespace Intersect_Updater
                 }
             }
             this.Text = settings.UpdaterTitle;
-            lbl = new TransparentLabel(lblStatus);
-            lbl.ForeColor = Color.White;
             Task.Run(Run);
         }
 
